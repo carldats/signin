@@ -358,9 +358,9 @@ def main():
 
     # 获取所有 refresh token 指向用户
     users = (
-        [config['refresh_tokens']]
-        if type(config['refresh_tokens']) == str
-        else config['refresh_tokens']
+        [config['aliyun_driver_refresh_tokens']]
+        if type(config['aliyun_driver_refresh_tokens']) == str
+        else config['aliyun_driver_refresh_tokens']
     )
 
     results = []

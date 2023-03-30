@@ -103,8 +103,8 @@ class lixianla():
         else ConfigObj('config.ini', encoding='UTF8')
     )
 
-    email = config['login_email']
-    password = config['login_password']
+    email = config['li_xian_la_login_email']
+    password = config['li_xian_la_login_password']
     retryMaxCount = 10
 
     codeHeaders = {
