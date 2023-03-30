@@ -265,11 +265,11 @@ def init_logger(debug: Optional[bool] = False) -> NoReturn:
 
 def get_config_from_env() -> Optional[dict]:
     try:
-        refresh_tokens = environ['ALIYUN_DRIVER_REFRESH_TOKENS'] or ''
+        aliyun_driver_refresh_tokens = environ['ALIYUN_DRIVER_REFRESH_TOKENS'] or ''
         push_types = environ['PUSH_TYPES'] or ''
 
         return {
-            'refresh_tokens': refresh_tokens.split(','),
+            'aliyun_driver_refresh_tokens': aliyun_driver_refresh_tokens.split(','),
             'push_types': push_types.split(','),
             'serverchan_send_key': environ['SERVERCHAN_SEND_KEY'],
             'telegram_endpoint': 'https://api.telegram.org',
