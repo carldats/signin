@@ -2,8 +2,7 @@ FROM python:3.10
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
-RUN pip install ddddocr -i https://pypi.tuna.tsinghua.edu.cn/simple/
+RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 COPY . .
 
