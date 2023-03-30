@@ -22,8 +22,8 @@ def get_config_from_env() -> Optional[dict]:
 
         return {
             'push_types': push_types.split(','),
-            'login_email': environ['LI_XIAN_LA_LOGIN_EMAIL'],
-            'login_password': environ['LI_XIAN_LA_LOGIN_PASSWORD'],
+            'li_xian_la_login_email': environ['LI_XIAN_LA_LOGIN_EMAIL'],
+            'li_xian_la_login_password': environ['LI_XIAN_LA_LOGIN_PASSWORD'],
             'serverchan_send_key': environ['SERVERCHAN_SEND_KEY'],
             'telegram_endpoint': 'https://api.telegram.org',
             'telegram_bot_token': environ['TELEGRAM_BOT_TOKEN'],
