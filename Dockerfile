@@ -2,7 +2,8 @@ FROM python:3.10
 
 WORKDIR /usr/src/app
 
-RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+COPY requirements.txt ./
+RUN pip install -r requirements.txt  -i https://mirrors.aliyun.com/pypi/simple
 
 COPY . .
 
