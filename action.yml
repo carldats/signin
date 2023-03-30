@@ -1,0 +1,136 @@
+name: 签到
+author: TED
+description: 'signin automatically'
+
+inputs:
+  LI_XIAN_LA_LOGIN_EMAIL:
+    description: 'LOGIN_EMAIL'
+    required: true
+
+  LI_XIAN_LA_LOGIN_PASSWORD:
+    description: 'LOGIN_PASSWORD'
+    required: true
+
+  ALIYUN_DRIVER_REFRESH_TOKENS:
+    description: 'AliyunDrive refresh tokens'
+    required: true
+
+  GP_TOKEN:
+    description: 'Github personal access token'
+    required: false
+    default: ''
+
+  PUSH_TYPES:
+    description: 'Push types for signin result'
+    required: false
+    default: ''
+
+  SERVERCHAN_SEND_KEY:
+    description: 'ServerChan send key'
+    required: false
+    default: ''
+
+  TELEGRAM_BOT_TOKEN:
+    description: 'Telegram bot token'
+    required: false
+    default: ''
+
+  TELEGRAM_CHAT_ID:
+    description: 'Telegram chat id'
+    required: false
+    default: ''
+
+  PUSHPLUS_TOKEN:
+    description: 'PushPlus token'
+    required: false
+    default: ''
+
+  SMTP_HOST:
+    description: 'SMTP host'
+    required: false
+    default: ''
+
+  SMTP_PORT:
+    description: 'SMTP port'
+    required: false
+    default: ''
+
+  SMTP_TLS:
+    description: 'SMTP TLS'
+    required: false
+    default: 'true'
+
+  SMTP_USER:
+    description: 'SMTP user'
+    required: false
+    default: ''
+
+  SMTP_PASSWORD:
+    description: 'SMTP password'
+    required: false
+    default: ''
+
+  SMTP_SENDER:
+    description: 'SMTP sender'
+    required: false
+    default: ''
+
+  SMTP_RECEIVER:
+    description: 'SMTP receiver'
+    required: false
+    default: ''
+
+  FEISHU_WEBHOOK:
+    description: 'Feishu webhook'
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - id: version
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        repository: carldats/signin
+        excludes: prerelease, draft
+    - name: Download
+      shell: bash
+      run: |
+        wget https://codeload.github.com/carldats/signin/zip/refs/heads/master -O release.zip
+        rm -rf release
+        unzip release.zip -d release
+        rm release.zip
+    - name: Run
+      shell: bash
+      run: |
+        cd release
+        cd $(ls -dt */|head -1 )
+        pip install -r requirements.txt
+        python app.py action
+      env:
+        LI_XIAN_LA_LOGIN_EMAIL: ${{ inputs.LI_XIAN_LA_LOGIN_EMAIL }}
+        LI_XIAN_LA_LOGIN_PASSWORD: ${{ inputs.LI_XIAN_LA_LOGIN_PASSWORD }}
+        ALIYUN_DRIVER_REFRESH_TOKENS: ${{ inputs.ALIYUN_DRIVER_REFRESH_TOKENS }}
+        GP_TOKEN: ${{ inputs.GP_TOKEN }}
+        GITHUB_REPOS: ${{ github.repository }}
+        PUSH_TYPES: ${{ inputs.PUSH_TYPES }}
+        SERVERCHAN_SEND_KEY: ${{ inputs.SERVERCHAN_SEND_KEY }}
+        TELEGRAM_BOT_TOKEN: ${{ inputs.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ inputs.TELEGRAM_CHAT_ID }}
+        PUSHPLUS_TOKEN: ${{ inputs.PUSHPLUS_TOKEN }}
+        SMTP_HOST: ${{ inputs.SMTP_HOST }}
+        SMTP_PORT: ${{ inputs.SMTP_PORT }}
+        SMTP_TLS: ${{ inputs.SMTP_TLS }}
+        SMTP_USER: ${{ inputs.SMTP_USER }}
+        SMTP_PASSWORD: ${{ inputs.SMTP_PASSWORD }}
+        SMTP_SENDER: ${{ inputs.SMTP_SENDER }}
+        SMTP_RECEIVER: ${{ inputs.SMTP_RECEIVER }}
+        FEISHU_WEBHOOK: ${{ inputs.FEISHU_WEBHOOK }}
+
+branding:
+    icon: 'check-circle'
+    color: 'orange'

@@ -1,0 +1,37 @@
+name: 签到
+
+on:
+  schedule:
+   # 每天国际时间 00:08 运行一次, 中国时间 08:08
+    - cron: '08 00 * * *'
+  repository_dispatch:
+  workflow_dispatch:
+
+jobs:
+  signin:
+    name: 签到
+    runs-on: ubuntu-latest
+    steps:
+      - uses: carldats/signin@master
+        with:
+          # 离线啦
+          LI_XIAN_LA_LOGIN_EMAIL: ${{ secrets.LI_XIAN_LA_LOGIN_EMAIL }}
+          LI_XIAN_LA_LOGIN_PASSWORD: ${{ secrets.LI_XIAN_LA_LOGIN_PASSWORD }}
+          # 阿里云盘
+          ALIYUN_DRIVER_REFRESH_TOKENS: ${{ secrets.ALIYUN_DRIVER_REFRESH_TOKENS }}
+          # github token
+          GP_TOKEN: ${{ secrets.GP_TOKEN}}
+          # 消息推送
+          PUSH_TYPES: ${{ secrets.PUSH_TYPES}}
+          SERVERCHAN_SEND_KEY: ${{ secrets.SERVERCHAN_SEND_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_TLS: ${{ secrets.SMTP_TLS }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_SENDER: ${{ secrets.SMTP_SENDER }}
+          SMTP_RECEIVER: ${{ secrets.SMTP_RECEIVER }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
