@@ -193,22 +193,19 @@ class SignIn:
 
         return self.__generate_result()
 
-
-"""
-推送签到结果
-:param config: 配置文件, ConfigObj 对象或字典
-:param content: 推送内容
-:param content_html: 推送内容, HTML 格式
-:param title: 推送标题
-"""
-
-
 def push(
         config: ConfigObj | dict,
         content: str,
         content_html: str,
         title: Optional[str] = None,
 ) -> NoReturn:
+    """
+    推送签到结果
+    :param config: 配置文件, ConfigObj 对象或字典
+    :param content: 推送内容
+    :param content_html: 推送内容, HTML 格式
+    :param title: 推送标题
+    """
     configured_push_types = [
         i.lower().strip()
         for i in (
@@ -231,12 +228,10 @@ def push(
             pusher.push(config, content, content_html, title)
 
 
-"""
-初始化日志系统
-"""
-
-
 def init_logger(debug: Optional[bool] = False) -> NoReturn:
+    """
+    初始化日志系统
+    """
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
     log_format = logging.Formatter(
@@ -256,15 +251,12 @@ def init_logger(debug: Optional[bool] = False) -> NoReturn:
     fh.setFormatter(log_format)
     log.addHandler(fh)
 
-
-"""
-从环境变量获取配置
-
-:return: 配置字典, 配置缺失返回 None
-"""
-
-
 def get_config_from_env() -> Optional[dict]:
+    """
+    从环境变量获取配置
+
+    :return: 配置字典, 配置缺失返回 None
+    """
     try:
         aliyun_driver_refresh_tokens = environ['ALIYUN_DRIVER_REFRESH_TOKENS'] or ''
         push_types = environ['PUSH_TYPES'] or ''
@@ -291,13 +283,10 @@ def get_config_from_env() -> Optional[dict]:
         logging.error(f'环境变量 {e} 缺失.')
         return None
 
-
-"""
-兑换福利码
-"""
-
-
 def reward_code(token: str, code: str) -> Optional[str]:
+    """
+    兑换福利码
+    """
     try:
         request = requests.post(
             'https://member.aliyundrive.com/v1/users/rewards',
@@ -324,15 +313,12 @@ def get_args() -> argparse.Namespace:
 
     return parser.parse_args()
 
-
-"""
-主函数
-
-:return:
-"""
-
-
 def main():
+    """
+    主函数
+
+    :return:
+    """
     environ['NO_PROXY'] = '*'  # 禁止代理
 
     # 旧版本兼容
