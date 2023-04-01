@@ -87,7 +87,6 @@ def get_args() -> argparse.Namespace:
 
 
 class lixianla():
-
     if 'action' in argv:
         by_action = True
         debug = False
@@ -148,6 +147,9 @@ class lixianla():
         result = str(loginResp.text)
         print(result)
         flag = '登录成功' in result
+        if not flag:
+            continue
+        flag = 'vcode' not in result
         if not flag:
             continue
 
