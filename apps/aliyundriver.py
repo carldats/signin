@@ -387,7 +387,7 @@ def main():
 
     results = []
     do_not_reward = (
-        environ['DO_NOT_REWARD'] == 'true'
+        environ['ALIYUN_DRIVER_DO_NOT_REWARD'] == 'true'
         if args.action
         else
         args.do_not_reward
