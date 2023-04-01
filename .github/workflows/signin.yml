@@ -19,6 +19,7 @@ jobs:
           LI_XIAN_LA_LOGIN_PASSWORD: ${{ secrets.LI_XIAN_LA_LOGIN_PASSWORD }}
           # 阿里云盘
           ALIYUN_DRIVER_REFRESH_TOKENS: ${{ secrets.ALIYUN_DRIVER_REFRESH_TOKENS }}
+          ALIYUN_DRIVER_DO_NOT_REWARD: ${{ secrets.ALIYUN_DRIVER_DO_NOT_REWARD }}
           # github token
           GP_TOKEN: ${{ secrets.GP_TOKEN}}
           # 消息推送

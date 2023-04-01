@@ -16,7 +16,7 @@ inputs:
     required: true
 
   ALIYUN_DRIVER_DO_NOT_REWARD:
-    description: 'Do not reward'
+    description: 'AliyunDrive Do not reward'
     required: false
     default: 'false'
 
@@ -140,7 +140,7 @@ runs:
         cd release
         cd $(ls -dt */|head -1 )
         pip install -r requirements.txt
-        python app.py action
+        python app.py -a
       env:
         LI_XIAN_LA_LOGIN_EMAIL: ${{ inputs.LI_XIAN_LA_LOGIN_EMAIL }}
         LI_XIAN_LA_LOGIN_PASSWORD: ${{ inputs.LI_XIAN_LA_LOGIN_PASSWORD }}
@@ -168,5 +168,5 @@ runs:
         CQHTTP_ACCESS_TOKEN: ${{ inputs.CQHTTP_ACCESS_TOKEN }}
 
 branding:
-  icon: 'check-circle'
-  color: 'orange'
+    icon: 'check-circle'
+    color: 'orange'
