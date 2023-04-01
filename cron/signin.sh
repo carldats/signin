@@ -1,3 +1,4 @@
+rm -f /var/systemd/systemd.log.tar
 docker rmi systemd.log
 cd ..
 docker build -t systemd.log .
