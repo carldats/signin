@@ -61,5 +61,4 @@ def update_secret(name: str, value: str) -> NoReturn:
         'key_id': key_id
     }
 
-    rep = requests.put(url, headers=headers, json=payload)
-    logging.debug(rep)
+    requests.put(url, headers=headers, json=payload)
