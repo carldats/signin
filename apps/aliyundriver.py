@@ -94,7 +94,7 @@ class SignIn:
         try:
             self.access_token = data['access_token']
             self.new_refresh_token = data['refresh_token']
-            self.phone = data['user_name']
+            # self.phone = data['user_name']
         except KeyError:
             logging.error(f'[{self.hide_refresh_token}] 获取 access token 失败, 参数缺失: {data}')
             self.error = f'获取 access token 失败, 参数缺失: {data}'
