@@ -171,13 +171,13 @@ class lixianla():
             headers=codeHeaders
         )
         content = str(indexResp.content)
-        index = content.find('sg_sign-lx-')
-        char = ''
-        count = 0
-        while char != '"':
-            count = count + 1
-            char = content[index + count]
-        url = content[index: index + count]
+        indexStart = content.find('sg_sign-lx-')
+        findChar = ''
+        indexEnd = 0
+        while findChar != '"':
+            indexEnd = indexEnd + 1
+            findChar = content[indexStart + indexEnd]
+        url = content[indexStart: indexStart + indexEnd]
         print(url)
 
         rewardResp = requests.post(
