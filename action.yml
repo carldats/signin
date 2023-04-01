@@ -3,27 +3,22 @@ author: TED
 description: 'signin automatically'
 
 inputs:
-  LI_XIAN_LA_LOGIN_EMAIL:
-    description: 'LOGIN_EMAIL'
+  ALIYUNDRIVE_REFRESH_TOKENS:
+    description: 'ALIYUNDRIVE_REFRESH_TOKENS'
     required: true
 
-  LI_XIAN_LA_LOGIN_PASSWORD:
-    description: 'LOGIN_PASSWORD'
-    required: true
-
-  ALIYUN_DRIVER_REFRESH_TOKENS:
-    description: 'AliyunDrive refresh tokens'
-    required: true
-
-  ALIYUN_DRIVER_DO_NOT_REWARD:
+  ALIYUN_DRIVE_DO_NOT_REWARD:
     description: 'AliyunDrive Do not reward'
     required: false
     default: 'false'
 
-  GP_TOKEN:
-    description: 'Github personal access token'
-    required: false
-    default: ''
+  LIXIANLA_LOGIN_EMAIL:
+    description: 'LIXIANLA_LOGIN_EMAIL'
+    required: true
+
+  LIXIANLALOGIN_PASSWORD:
+    description: 'LIXIANLALOGIN_PASSWORD'
+    required: true
 
   PUSH_TYPES:
     description: 'Push types for signin result'
@@ -115,6 +110,11 @@ inputs:
     required: false
     default: ''
 
+  GP_TOKEN:
+    description: 'Github personal access token'
+    required: false
+    default: ''
+
 runs:
   using: composite
   steps:
@@ -142,12 +142,13 @@ runs:
         pip install -r requirements.txt
         python app.py -a
       env:
-        LI_XIAN_LA_LOGIN_EMAIL: ${{ inputs.LI_XIAN_LA_LOGIN_EMAIL }}
-        LI_XIAN_LA_LOGIN_PASSWORD: ${{ inputs.LI_XIAN_LA_LOGIN_PASSWORD }}
-        ALIYUN_DRIVER_REFRESH_TOKENS: ${{ inputs.ALIYUN_DRIVER_REFRESH_TOKENS }}
-        ALIYUN_DRIVER_DO_NOT_REWARD: ${{ inputs.ALIYUN_DRIVER_DO_NOT_REWARD }}
-        GP_TOKEN: ${{ inputs.GP_TOKEN }}
-        GITHUB_REPOS: ${{ github.repository }}
+        # 阿里云盘
+        ALIYUNDRIVE_REFRESH_TOKENS: ${{ inputs.ALIYUNDRIVE_REFRESH_TOKENS }}
+        ALIYUNDRIVE_DO_NOT_REWARD: ${{ inputs.ALIYUNDRIVE_DO_NOT_REWARD }}
+        # 离线啦
+        LIXIANLA_LOGIN_EMAIL: ${{ inputs.LIXIANLA_LOGIN_EMAIL }}
+        LIXIANLA_LOGIN_PASSWORD: ${{ inputs.LIXIANLA_LOGIN_PASSWORD }}
+        # 消息推送
         PUSH_TYPES: ${{ inputs.PUSH_TYPES }}
         SERVERCHAN_SEND_KEY: ${{ inputs.SERVERCHAN_SEND_KEY }}
         TELEGRAM_BOT_TOKEN: ${{ inputs.TELEGRAM_BOT_TOKEN }}
@@ -166,7 +167,10 @@ runs:
         CQHTTP_ENDPOINT: ${{ inputs.CQHTTP_ENDPOINT }}
         CQHTTP_USER_ID: ${{ inputs.CQHTTP_USER_ID }}
         CQHTTP_ACCESS_TOKEN: ${{ inputs.CQHTTP_ACCESS_TOKEN }}
+        # github
+        GP_TOKEN: ${{ inputs.GP_TOKEN }}
+        GITHUB_REPOS: ${{ github.repository }}
 
 branding:
-    icon: 'check-circle'
-    color: 'orange'
+  icon: 'check-circle'
+  color: 'orange'

@@ -1,12 +1,9 @@
-from apps import aliyundriver, lixianla
+import threading
+
+from modules import aliyundriver, lixianla
+from utils.common import init_config
 
 if __name__ == '__main__':
-    try:
-        aliyundriver
-    except Exception as e:
-        print(e)
-
-    try:
-        lixianla
-    except Exception as e:
-        print(e)
+    config = init_config()
+    threading.Thread(target=aliyundriver.main(config), name='阿里云盘').start()
+    threading.Thread(target=lixianla.main(config), name='离线啦').start()

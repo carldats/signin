@@ -1,6 +1,6 @@
-from os import environ
-from base64 import b64encode
 import logging
+from base64 import b64encode
+from os import environ
 from typing import NoReturn
 
 import requests

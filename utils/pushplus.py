@@ -21,7 +21,7 @@ class Pusher:
         :param content: 消息内容
         :return:
         """
-        request =  requests.post(
+        request = requests.post(
             'http://www.pushplus.plus/send',
             json={
                 'token': self.token,

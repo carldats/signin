@@ -5,8 +5,8 @@
     @Description: 
 """
 
-from typing import Optional
 import logging
+from typing import Optional
 
 import requests
 from configobj import ConfigObj

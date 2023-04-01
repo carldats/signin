@@ -2,7 +2,7 @@ name: 签到
 
 on:
   schedule:
-   # 每天国际时间 00:08 运行一次, 中国时间 08:08
+    # 每天国际时间 00:08 运行一次, 中国时间 08:08
     - cron: '08 00 * * *'
   repository_dispatch:
   workflow_dispatch:
@@ -15,13 +15,11 @@ jobs:
       - uses: carldats/signin@master
         with:
           # 离线啦
-          LI_XIAN_LA_LOGIN_EMAIL: ${{ secrets.LI_XIAN_LA_LOGIN_EMAIL }}
-          LI_XIAN_LA_LOGIN_PASSWORD: ${{ secrets.LI_XIAN_LA_LOGIN_PASSWORD }}
+          LIXIANLA_LOGIN_EMAIL: ${{ secrets.LIXIANLA_LOGIN_EMAIL }}
+          LIXIANLA_LOGIN_PASSWORD: ${{ secrets.LIXIANLA_LOGIN_PASSWORD }}
           # 阿里云盘
-          ALIYUN_DRIVER_REFRESH_TOKENS: ${{ secrets.ALIYUN_DRIVER_REFRESH_TOKENS }}
-          ALIYUN_DRIVER_DO_NOT_REWARD: ${{ secrets.ALIYUN_DRIVER_DO_NOT_REWARD }}
-          # github token
-          GP_TOKEN: ${{ secrets.GP_TOKEN}}
+          ALIYUNDRIVE_REFRESH_TOKENS: ${{ secrets.ALIYUNDRIVE_REFRESH_TOKENS }}
+          ALIYUNDRIVE_DO_NOT_REWARD: ${{ secrets.ALIYUNDRIVE_DO_NOT_REWARD }}
           # 消息推送
           PUSH_TYPES: ${{ secrets.PUSH_TYPES}}
           SERVERCHAN_SEND_KEY: ${{ secrets.SERVERCHAN_SEND_KEY }}
@@ -41,3 +39,5 @@ jobs:
           CQHTTP_ENDPOINT: ${{ secrets.CQHTTP_ENDPOINT }}
           CQHTTP_USER_ID: ${{ secrets.CQHTTP_USER_ID }}
           CQHTTP_ACCESS_TOKEN: ${{ secrets.CQHTTP_ACCESS_TOKEN }}
+          # github token
+          GP_TOKEN: ${{ secrets.GP_TOKEN}}
