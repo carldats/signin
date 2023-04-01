@@ -193,6 +193,6 @@ class lixianla():
             time.sleep(2)
 
     if flag:
-        push(config, result, '', '√离线啦签到成功')
+        push(config, result, '', '√离线啦签到成功1')
     else:
-        push(config, result, '', '×离线啦签到失败')
+        push(config, result, '', '×离线啦签到失败1')

@@ -403,7 +403,7 @@ def main():
         results.append(signin.run())
 
     # 合并推送
-    text = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
+    text = '\n\n'.join('1第' + str(i['count']) + '天：' + i['reward'] for i in results)
 
     push(config, text, '', text)
 
