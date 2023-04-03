@@ -30,11 +30,6 @@ def main(config):
         'x-requested-with': 'XMLHttpRequest'
     }
 
-    loginResp = requests.post(
-        url='https://lixianla.com/user-login.htm',
-        headers=codeHeaders
-    )
-
     flag = False
     while not flag:
         time.sleep(1)
