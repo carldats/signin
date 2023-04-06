@@ -247,16 +247,22 @@ def main(config):
 
     results = []
 
-    for user in users:
-        signin = SignIn(
-            config=config,
-            refresh_token=user,
-            do_not_reward=aliyundrive_do_not_reward,
-        )
+    retry = 0
+    while retry < 10:
+        try:
+            retry = retry + 1
+            for user in users:
+                signin = SignIn(
+                    config=config,
+                    refresh_token=user,
+                    do_not_reward=aliyundrive_do_not_reward,
+                )
 
-        results.append(signin.run())
+                results.append(signin.run())
 
-    # 合并推送
-    text = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
-
-    push(config, text, '', text)
+            # 合并推送
+            text = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
+            push(config, text, '', text)
+            break
+        except Exception as e:
+            logging.error(e)
