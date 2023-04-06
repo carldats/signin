@@ -7,6 +7,7 @@
 
 import json
 import logging
+import time
 from typing import NoReturn, Optional
 
 import requests
@@ -263,6 +264,7 @@ def main(config):
             # 合并推送
             text = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
             push(config, text, '', text)
+            time.sleep(2)
             break
         except Exception as e:
             logging.error(e)
