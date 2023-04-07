@@ -3,6 +3,7 @@ import logging
 from os import environ
 from typing import NoReturn, Optional
 
+import requests
 from configobj import ConfigObj
 
 from utils import dingtalk, serverchan, pushdeer, telegram, pushplus, smtp, feishu, cqhttp, webhook
@@ -14,6 +15,8 @@ def init_config() -> dict:
     args = get_args()
 
     init_logger(args.debug)  # 初始化日志系统
+
+    get_ip()
 
     # 获取配置
     config = (
@@ -148,3 +151,11 @@ def push(
     }.items():
         if push_type in configured_push_types:
             pusher.push(config, content, content_html, title)
+
+
+def get_ip():
+    try:
+        resp = requests.get(url="https://gwgp-cekvddtwkob.n.bdcloudapi.com/ip/local/geo/v1/district")
+        logging.info(resp.text)
+    except Exception as e:
+        logging.error(e)
