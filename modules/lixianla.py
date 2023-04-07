@@ -10,6 +10,33 @@ import requests
 from utils.common import push, get_ip
 
 
+def getVcode(codeHeaders) -> str:
+    vcode = ''
+    while not re.match('[0-9]{5}', vcode):
+        codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
+        codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
+        ocr = ddddocr.DdddOcr()
+        vcode = ocr.classification(codeBase64)
+        logging.info('验证码：' + vcode)
+    return vcode
+
+
+def getSignUrl(codeHearders) -> str:
+    indexResp = requests.post(
+        url='https://lixianla.com',
+        headers=codeHearders
+    )
+    content = str(indexResp.content)
+    indexStart = content.find('sg_sign-lx-')
+    findChar = ''
+    indexEnd = 0
+    while findChar != '"':
+        indexEnd = indexEnd + 1
+        findChar = content[indexStart + indexEnd]
+
+    return content[indexStart: indexStart + indexEnd]
+
+
 def main(config):
     email = config['lixianla_login_email']
     password = config['lixianla_login_password']
@@ -30,18 +57,17 @@ def main(config):
         'x-requested-with': 'XMLHttpRequest'
     }
 
-    flag = False
-    while not flag:
-        time.sleep(1)
+    count = 0
+    success = False
+    while not success:
+        count = count + 1
+        logging.info('==========第' + str(count) + '次登陆==========')
         codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
         ocr = ddddocr.DdddOcr()
         vcode = ocr.classification(codeBase64)
         logging.info('登陆验证码：' + vcode)
-        flag = re.match('[0-9]{5}', vcode)
-        if not flag:
-            continue
-        if 'set-cookie' not in codeResp.headers:
+        if (not re.match('[0-9]{5}', vcode)) or ('set-cookie' not in codeResp.headers):
             continue
         codeHeaders['cookie'] = codeResp.headers['set-cookie']
         loginResp = requests.post(
@@ -50,51 +76,29 @@ def main(config):
         )
         result = str(loginResp.text)
         logging.info(result)
-        flag = '登录成功' in result or 'vcode' not in result
-        if not flag:
-            continue
+        success = ('登录成功' in result) and (count < retryMaxCount)
+        if (not success):
+            time.sleep(1)
 
     count = 0
-    flag = False
+    success = False
     result = ''
-    while not flag and count < retryMaxCount:
+    while not success:
         count = count + 1
         logging.info('==========第' + str(count) + '次签到==========')
-        vcode = ''
-        while not re.match('[0-9]{5}', vcode):
-            codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
-            codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
-            ocr = ddddocr.DdddOcr()
-            vcode = ocr.classification(codeBase64)
-            logging.info('签到验证码：' + vcode)
-
-        # 获取签到地址
-        indexResp = requests.post(
-            url='https://lixianla.com',
-            headers=codeHeaders
-        )
-        content = str(indexResp.content)
-        indexStart = content.find('sg_sign-lx-')
-        findChar = ''
-        indexEnd = 0
-        while findChar != '"':
-            indexEnd = indexEnd + 1
-            findChar = content[indexStart + indexEnd]
-        url = content[indexStart: indexStart + indexEnd]
-
         rewardResp = requests.post(
-            url="https://lixianla.com/" + url + "?vcode=" + vcode,
+            url="https://lixianla.com/" + getSignUrl(codeHeaders) + "?vcode=" + getVcode(codeHeaders),
             headers=codeHeaders
         )
-        result = rewardResp.text
+        result = str(rewardResp.text)
         logging.info(result)
-        flag = '成功' in result or '今天已经签过啦' in result
-        if not flag:
-            time.sleep(2)
+        success = ('成功' in result or '今天已经签过啦' in result) and (count < retryMaxCount)
+        if not success:
+            time.sleep(1)
 
     ipInfo = get_ip()
 
-    if flag:
+    if success:
         push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
     else:
         push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
