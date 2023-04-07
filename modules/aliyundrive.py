@@ -13,7 +13,7 @@ from typing import NoReturn, Optional
 import requests
 from configobj import ConfigObj
 
-from utils.common import push
+from utils.common import push, get_ip
 
 
 class SignIn:
@@ -248,6 +248,8 @@ def main(config):
 
     results = []
 
+    ipInfo = get_ip()
+
     retry = 0
     while retry < 10:
         try:
@@ -261,9 +263,10 @@ def main(config):
 
                 results.append(signin.run())
 
-            # 合并推送
-            text = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
-            push(config, text, '', text)
+                # 合并推送
+            title = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
+            text = title + '\n\n' + ipInfo
+            push(config, text, '', title)
             time.sleep(2)
             break
         except Exception as e:

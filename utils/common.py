@@ -16,8 +16,6 @@ def init_config() -> dict:
 
     init_logger(args.debug)  # 初始化日志系统
 
-    get_ip()
-
     # 获取配置
     config = (
         get_config_from_env()
@@ -153,9 +151,11 @@ def push(
             pusher.push(config, content, content_html, title)
 
 
-def get_ip():
+def get_ip() -> str:
     try:
         resp = requests.get(url="https://gwgp-cekvddtwkob.n.bdcloudapi.com/ip/local/geo/v1/district")
         logging.info(resp.text)
+        return resp.text
     except Exception as e:
         logging.error(e)
+        return ''

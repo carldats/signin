@@ -7,7 +7,7 @@ import time
 import ddddocr
 import requests
 
-from utils.common import push
+from utils.common import push, get_ip
 
 
 def main(config):
@@ -92,7 +92,9 @@ def main(config):
         if not flag:
             time.sleep(2)
 
+    ipInfo = get_ip()
+
     if flag:
-        push(config, result, '', '√离线啦签到成功')
+        push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
     else:
-        push(config, result, '', '×离线啦签到失败')
+        push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
