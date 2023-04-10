@@ -17,11 +17,11 @@ def init_config() -> dict:
     init_logger(args.debug)  # 初始化日志系统
 
     # 获取配置
-    config = (
-        get_config_from_env()
-        if args.action
-        else ConfigObj('config.ini', encoding='UTF8')
-    )
+    config = ConfigObj('config.ini', encoding='UTF8')
+    if args.action:
+        config = get_config_from_env()
+    if args.flow:
+        config = ConfigObj('codeup.flow.config.ini', encoding='UTF8')
 
     if not config:
         logging.error('获取配置失败.')
@@ -39,6 +39,7 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='签到')
 
     parser.add_argument('-a', '--action', help='由 GitHub Actions 调用', action='store_true', default=False)
+    parser.add_argument('-f', '--flow', help='由 codeup flow 调用', action='store_true', default=True)
     parser.add_argument('-d', '--debug', help='调试模式, 会输出更多调试数据', action='store_true', default=False)
 
     return parser.parse_args()
