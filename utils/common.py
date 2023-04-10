@@ -39,7 +39,7 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='签到')
 
     parser.add_argument('-a', '--action', help='由 GitHub Actions 调用', action='store_true', default=False)
-    parser.add_argument('-f', '--flow', help='由 codeup flow 调用', action='store_true', default=True)
+    parser.add_argument('-f', '--flow', help='由 codeup flow 调用', action='store_true', default=False)
     parser.add_argument('-d', '--debug', help='调试模式, 会输出更多调试数据', action='store_true', default=False)
 
     return parser.parse_args()
