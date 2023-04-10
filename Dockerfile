@@ -1,7 +1,5 @@
 FROM python:3.10-slim
 
-ARG actionType
-
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
@@ -14,4 +12,4 @@ RUN pip install -r requirements.txt  -i https://pypi.mirrors.ustc.edu.cn/simple/
 
 COPY . .
 
-CMD [ "python", "./app.py ${actionType}" ]
+CMD [ "python", "./app.py" ]
