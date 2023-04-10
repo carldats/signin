@@ -1,9 +1,9 @@
 name: 签到
 
-# on:
-  schedule:
+on:
+  # schedule:
     # 每天国际时间 22:08 运行一次, 中国时间 06:08，实际执行会延迟一个半到两个小时
-    - cron: '08 22 * * *'
+    # - cron: '08 22 * * *'
   repository_dispatch:
   workflow_dispatch:
 
