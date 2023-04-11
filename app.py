@@ -9,7 +9,6 @@ if __name__ == '__main__':
     for file_name in os.listdir('modules'):
         if not file_name.endswith('.py'):
             continue
-        logging.info('\r\n\r\n')
         logging.info('#################################### ' + file_name + ' ####################################')
         file_name = file_name.replace('.py', '')
         import_module('modules.' + file_name).run(config)
