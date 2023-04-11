@@ -1,6 +1,6 @@
 import logging
 import os
-import threading
+# import threading
 from importlib import import_module
 
 from utils.common import init_config
@@ -13,4 +13,5 @@ if __name__ == '__main__':
         logging.info('开始执行---' + file_name)
         file_name = file_name.replace('.py', '')
         obj = import_module('modules.' + file_name)
-        threading.Thread(target=obj.main(config), name=file_name).start()
+        # threading.Thread(target=obj.main(config), name=file_name).start()
+        obj.main(config)
