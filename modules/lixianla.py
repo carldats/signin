@@ -37,7 +37,7 @@ def getSignUrl(codeHearders) -> str:
     return content[indexStart: indexStart + indexEnd]
 
 
-def main(config):
+def run(config):
     ipInfo = get_ip()
 
     email = config['lixianla_login_email']

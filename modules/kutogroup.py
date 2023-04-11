@@ -1,7 +1,7 @@
 import requests
 
 
-def main(config):
+def run(config):
     accounts = {
         'kt@kt.com': '4kA-neFoVzFMVx20Vp7p4HRGnwFoV_CTV3vPFHfquHq_nwFoF_1MV_YxV_YxLkFPFHLBuDMX2r1pJpA3zpFPFHLIWDMGnD7pJpAgnDFp5eA7s02pJpA_S0XGsg9XSkM02hTp5eA0n8AxsDRGF_IpVzWgLwFPFHldSH2pJpAsweAR',
 
@@ -16,4 +16,4 @@ def main(config):
 
 
 if __name__ == '__main__':
-    main('')
+    run('')

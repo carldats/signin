@@ -235,7 +235,7 @@ class SignIn:
         return self.__generate_result()
 
 
-def main(config):
+def run(config):
     ipInfo = get_ip()
 
     # 获取所有 refresh token 指向用户
