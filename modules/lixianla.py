@@ -15,7 +15,7 @@ def getVcode(codeHeaders) -> str:
     while not re.match('[0-9]{5}', vcode):
         codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
-        ocr = ddddocr.DdddOcr()
+        ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
         logging.info('验证码：' + vcode)
     return vcode
@@ -40,7 +40,7 @@ def getSignUrl(codeHearders) -> str:
 def main(config):
     email = config['lixianla_login_email']
     password = config['lixianla_login_password']
-    retryMaxCount = 10
+    retryMaxCount = 20
 
     codeHeaders = {
         'accept': 'text/plain, */*; q=0.01',
@@ -57,14 +57,12 @@ def main(config):
         'x-requested-with': 'XMLHttpRequest'
     }
 
-    count = 0
-    success = False
-    while not success:
-        count = count + 1
+    count = 1
+    while True:
         logging.info('==========第' + str(count) + '次登陆==========')
         codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
-        ocr = ddddocr.DdddOcr()
+        ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
         logging.info('登陆验证码：' + vcode)
         if (not re.match('[0-9]{5}', vcode)) or ('set-cookie' not in codeResp.headers):
@@ -76,15 +74,17 @@ def main(config):
         )
         result = str(loginResp.text)
         logging.info(result)
-        success = ('登录成功' in result) and (count < retryMaxCount)
-        if (not success):
+        if '登录成功' in result:
+            break
+        elif count > retryMaxCount:
+            return
+        else:
+            count = count + 1
             time.sleep(1)
 
-    count = 0
-    success = False
-    result = ''
-    while not success:
-        count = count + 1
+    count = 1
+    ipInfo = get_ip()
+    while True:
         logging.info('==========第' + str(count) + '次签到==========')
         rewardResp = requests.post(
             url="https://lixianla.com/" + getSignUrl(codeHeaders) + "?vcode=" + getVcode(codeHeaders),
@@ -92,13 +92,12 @@ def main(config):
         )
         result = str(rewardResp.text)
         logging.info(result)
-        success = ('成功' in result or '今天已经签过啦' in result) and (count < retryMaxCount)
-        if not success:
+        if '成功' in result or '今天已经签过啦' in result:
+            push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
+            return
+        elif count > retryMaxCount:
+            push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
+            return
+        else:
+            count = count + 1
             time.sleep(1)
-
-    ipInfo = get_ip()
-
-    if success:
-        push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
-    else:
-        push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
