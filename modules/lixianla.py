@@ -74,7 +74,7 @@ def run(config):
             url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + vcode,
             headers=codeHeaders
         )
-        result = str(loginResp.text)
+        result = str(loginResp.text).replace('\n', '')
         logging.info(result)
         if '登录成功' in result:
             break
@@ -91,7 +91,7 @@ def run(config):
             url="https://lixianla.com/" + getSignUrl(codeHeaders) + "?vcode=" + getVcode(codeHeaders),
             headers=codeHeaders
         )
-        result = str(rewardResp.text)
+        result = str(rewardResp.text).replace('\n', '')
         logging.info(result)
         if '成功' in result or '今天已经签过啦' in result:
             push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
