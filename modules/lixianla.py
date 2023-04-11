@@ -38,6 +38,8 @@ def getSignUrl(codeHearders) -> str:
 
 
 def main(config):
+    ipInfo = get_ip()
+
     email = config['lixianla_login_email']
     password = config['lixianla_login_password']
     retryMaxCount = 20
@@ -83,7 +85,6 @@ def main(config):
             time.sleep(1)
 
     count = 1
-    ipInfo = get_ip()
     while True:
         logging.info('==========第' + str(count) + '次签到==========')
         rewardResp = requests.post(

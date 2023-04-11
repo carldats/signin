@@ -236,6 +236,8 @@ class SignIn:
 
 
 def main(config):
+    ipInfo = get_ip()
+
     # 获取所有 refresh token 指向用户
     users = (
         [config['aliyundrive_refresh_tokens']]
@@ -247,9 +249,6 @@ def main(config):
         aliyundrive_do_not_reward = config['aliyundrive_do_not_reward']
 
     results = []
-
-    ipInfo = get_ip()
-
     retry = 0
     while retry < 10:
         try:
