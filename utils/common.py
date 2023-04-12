@@ -1,5 +1,7 @@
 import argparse
+import json
 import logging
+import os
 from os import environ
 from typing import NoReturn, Optional
 
@@ -52,8 +54,9 @@ def init_logger(debug: Optional[bool] = False) -> NoReturn:
     """
     log = logging.getLogger()
     log.setLevel(logging.DEBUG)
+    maxLen = len(max(os.listdir('modules'), key=len, default=""))
     log_format = logging.Formatter(
-        '%(asctime)s - %(filename)s:%(lineno)d - %(levelname)s: %(message)s'
+        '%(asctime)s - %(filename)' + str(maxLen) + 's:%(lineno)4d - %(levelname)5s: %(message)s'
     )
 
     # Console
@@ -154,8 +157,12 @@ def push(
 def get_ip() -> str:
     try:
         resp = requests.get(url="https://gwgp-cekvddtwkob.n.bdcloudapi.com/ip/local/geo/v1/district")
-        logging.info(resp.text)
-        return resp.text
+        text = json.loads(resp.text)
+        data = text['data']
+        result = data['continent'] + data['country'] + data['prov'] + data['city'] + data['district'] + data['owner'] + \
+                 text['ip']
+        logging.info(result)
+        return result
     except Exception as e:
         logging.error(e)
         return ''
