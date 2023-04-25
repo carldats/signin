@@ -250,6 +250,7 @@ def run(config):
 
     results = []
     retry = 0
+    flag = False
     while retry < 10:
         try:
             retry = retry + 1
@@ -267,7 +268,11 @@ def run(config):
             text = title + '\n\n' + ipInfo
             push(config, text, '', title)
             time.sleep(2)
+            flag = True
             break
         except Exception as e:
             logging.error(e)
-            push(config, str(e), '', '×阿里云签到失败')
+            flag = False
+
+    if (not flag):
+        push(config, '请检查流水线日志', '', '×阿里云签到失败')
