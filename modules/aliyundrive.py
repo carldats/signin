@@ -264,7 +264,7 @@ def run(config):
                 results.append(signin.run())
 
                 # 合并推送
-            title = '\n\n'.join('第' + str(i['count']) + '天：' + i['reward'] for i in results)
+            title = '\n\n'.join('√第' + str(i['count']) + '天：' + i['reward'] for i in results)
             text = title + '\n\n' + ipInfo
             push(config, text, '', title)
             time.sleep(2)
