@@ -270,3 +270,4 @@ def run(config):
             break
         except Exception as e:
             logging.error(e)
+            push(config, str(e), '', '阿里云签到失败')
