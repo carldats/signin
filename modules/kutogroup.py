@@ -15,7 +15,3 @@ def run(config):
         for _ in range(0, 5):
             resp = requests.post('http://104.233.162.120:81/lucky', data=data)
             logging.info(account + resp.text)
-
-
-if __name__ == '__main__':
-    run('')

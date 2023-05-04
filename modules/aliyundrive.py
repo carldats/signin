@@ -251,7 +251,7 @@ def run(config):
     results = []
     retry = 0
     flag = False
-    while retry < 10:
+    while retry < 20:
         try:
             retry = retry + 1
             for user in users:
@@ -265,11 +265,15 @@ def run(config):
 
                 # 合并推送
             title = '\n\n'.join('√第' + str(i['count']) + '天：' + i['reward'] for i in results)
-            text = title + '\n\n' + ipInfo
-            push(config, text, '', title)
-            time.sleep(2)
-            flag = True
-            break
+            if ('天：获得' not in title):
+                flag = False
+                time.sleep(2)
+                continue
+            else:
+                text = title + '\n\n' + ipInfo
+                # push(config, text, '', title)
+                flag = True
+                break
         except Exception as e:
             logging.error(e)
             flag = False

@@ -94,7 +94,7 @@ def run(config):
         result = str(rewardResp.text).replace('\n', '')
         logging.info(result)
         if '成功' in result or '今天已经签过啦' in result:
-            push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
+            # push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
             return
         elif count > retryMaxCount:
             push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
