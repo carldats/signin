@@ -271,6 +271,7 @@ def run(config):
                 continue
             else:
                 text = title + '\n\n' + ipInfo
+                logging.info(text)
                 # push(config, text, '', title)
                 flag = True
                 break

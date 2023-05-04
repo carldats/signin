@@ -17,7 +17,7 @@ def getVcode(codeHeaders) -> str:
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
         ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
-        logging.info('验证码：' + vcode)
+        # logging.info('验证码：' + vcode)
     return vcode
 
 
@@ -61,15 +61,15 @@ def run(config):
 
     count = 1
     while True:
-        logging.info('==========第' + str(count) + '次登陆==========')
         codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
         ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
-        logging.info('登陆验证码：' + vcode)
+        # logging.info('登陆验证码：' + vcode)
         if (not re.match('[0-9]{5}', vcode)) or ('set-cookie' not in codeResp.headers):
             continue
         codeHeaders['cookie'] = codeResp.headers['set-cookie']
+        logging.info('==========第' + str(count) + '次登陆==========')
         loginResp = requests.post(
             url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + vcode,
             headers=codeHeaders
