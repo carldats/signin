@@ -270,7 +270,7 @@ def run(config):
                 time.sleep(2)
                 continue
             else:
-                text = title + '\n\n' + ipInfo
+                text = '\n\n' + title
                 logging.info(text)
                 # push(config, text, '', title)
                 flag = True
