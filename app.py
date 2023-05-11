@@ -1,5 +1,6 @@
 import logging
 import os
+import threading
 from importlib import import_module
 
 from utils.common import init_config
@@ -11,4 +12,4 @@ if __name__ == '__main__':
             continue
         logging.info('#################################### ' + file_name + ' ####################################')
         file_name = file_name.replace('.py', '')
-        import_module('modules.' + file_name).run(config)
+        threading.Thread(target=import_module('modules.' + file_name).run(config), name=file_name).start()
