@@ -102,7 +102,7 @@ def run(config):
         )
         resultResp.close()
         result = resultResp.text
-        if '连续签到' in result:
+        if '已签' in result:
             indexStart = result.find('连续签到')
             findChar = ''
             indexEnd = 0
