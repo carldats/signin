@@ -13,16 +13,23 @@ from utils.common import push, get_ip
 def getVcode(codeHeaders) -> str:
     vcode = ''
     while not re.match('[0-9]{5}', vcode):
-        codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
+        codeResp = requests.get(
+            verify=False,
+            url="https://lixianla.com/vcode.htm?" + str(random.random()),
+            headers=codeHeaders
+        )
+        codeResp.close()
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
         ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
-        # logging.info('验证码：' + vcode)
+        logging.info('验证码：' + vcode)
     return vcode
 
 
 def getSignUrl(codeHearders) -> str:
     indexResp = requests.post(
+        timeout=5,
+        verify=False,
         url='https://lixianla.com',
         headers=codeHearders
     )
@@ -45,38 +52,43 @@ def run(config):
     retryMaxCount = 20
 
     codeHeaders = {
-        'accept': 'text/plain, */*; q=0.01',
-        'accept-language': 'zh-CN,zh;q=0.5',
-        'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'authority': 'lixianla.com',
+        'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'accept-language': 'zh-CN,zh;q=0.7',
+        'cookie': 'bbs_sid=qb5mkagm92j924563thcpjam9r',
         'dnt': '1',
-        'origin': 'https://lixianla.com',
         'referer': 'https://lixianla.com/user-login.htm',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
+        'sec-fetch-dest': 'image',
+        'sec-fetch-mode': 'no-cors',
         'sec-fetch-site': 'same-origin',
         'sec-gpc': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
-        'x-requested-with': 'XMLHttpRequest'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
     }
 
     count = 1
     while True:
-        codeResp = requests.post(url="https://lixianla.com/vcode.htm?" + str(random.random()), headers=codeHeaders)
+        codeResp = requests.get(
+            timeout=5,
+            verify=False,
+            url="https://lixianla.com/vcode.htm?" + str(random.random()),
+            headers=codeHeaders
+        )
+        codeResp.close()
         codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
         ocr = ddddocr.DdddOcr(show_ad=False)
         vcode = ocr.classification(codeBase64)
-        # logging.info('登陆验证码：' + vcode)
-        if (not re.match('[0-9]{5}', vcode)) or ('set-cookie' not in codeResp.headers):
+        logging.info('登陆验证码：' + vcode)
+        if (not re.match('[0-9]{5}', vcode)):
             continue
-        codeHeaders['cookie'] = codeResp.headers['set-cookie']
         logging.info('==========第' + str(count) + '次登陆==========')
         loginResp = requests.post(
+            timeout=5,
+            verify=False,
             url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + vcode,
             headers=codeHeaders
         )
-        result = str(loginResp.text).replace('\n', '')
-        logging.info(result)
-        if '登录成功' in result:
+        loginResp.close()
+        if email in loginResp.text:
             break
         elif count > retryMaxCount:
             return
@@ -88,12 +100,28 @@ def run(config):
     while True:
         logging.info('==========第' + str(count) + '次签到==========')
         rewardResp = requests.post(
+            timeout=5,
+            verify=False,
             url="https://lixianla.com/" + getSignUrl(codeHeaders) + "?vcode=" + getVcode(codeHeaders),
             headers=codeHeaders
         )
-        result = str(rewardResp.text).replace('\n', '')
-        logging.info(result)
-        if '成功' in result or '今天已经签过啦' in result:
+        rewardResp.close()
+        resultResp = requests.get(
+            timeout=5,
+            verify=False,
+            url="https://lixianla.com/sg_sign.htm",
+            headers=codeHeaders
+        )
+        resultResp.close()
+        result = resultResp.text
+        if '连续签到' in result:
+            indexStart = result.find('连续签到')
+            findChar = ''
+            indexEnd = 0
+            while findChar != '天':
+                indexEnd = indexEnd + 1
+                findChar = result[indexStart + indexEnd]
+            logging.info('√离线啦签到成功：' + result[indexStart: indexStart + indexEnd] + '天')
             # push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
             return
         elif count > retryMaxCount:

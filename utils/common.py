@@ -156,11 +156,18 @@ def push(
 
 def get_ip() -> str:
     try:
-        resp = requests.get(url="https://gwgp-cekvddtwkob.n.bdcloudapi.com/ip/local/geo/v1/district")
+        resp = requests.get(
+            timeout=5,
+            verify=False,
+            url="https://gwgp-cekvddtwkob.n.bdcloudapi.com/ip/local/geo/v1/district"
+        )
+        resp.close()
         text = json.loads(resp.text)
         data = text['data']
-        result = data['continent'] + data['country'] + data['prov'] + data['city'] + data['district'] + data['owner'] + \
-                 text['ip']
+        result = data['continent'] \
+                 + data['country'] + data['prov'] + data['city'] + data['district'] \
+                 + data['owner'] \
+                 + text['ip']
         logging.info(result)
         return result
     except Exception as e:
