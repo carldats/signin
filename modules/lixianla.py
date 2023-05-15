@@ -35,11 +35,11 @@ def getSignUrl(codeHearders) -> str:
     )
     content = str(indexResp.content)
     indexStart = content.find('sg_sign-lx-')
-    findChar = ''
+    temp = ''
     indexEnd = 0
-    while findChar != '"':
+    while temp != '"':
         indexEnd = indexEnd + 1
-        findChar = content[indexStart + indexEnd]
+        temp = content[indexStart + indexEnd]
 
     return content[indexStart: indexStart + indexEnd]
 
@@ -103,13 +103,11 @@ def run(config):
         resultResp.close()
         result = resultResp.text
         if '已签' in result:
-            indexStart = result.find('连续签到')
-            findChar = ''
-            indexEnd = 0
-            while findChar != '天':
-                indexEnd = indexEnd + 1
-                findChar = result[indexStart + indexEnd]
-            logging.info('√离线啦签到成功：' + result[indexStart: indexStart + indexEnd] + '天')
+            keyword = 'var s3 = '
+            indexStart = result.find(keyword) + len(keyword)
+            indexStart = indexStart + 1
+            indexEnd = indexStart + 6
+            logging.info('√离线啦签到成功：' + result[indexStart: indexEnd])
             # push(config, result + '\n\n' + serverIp, '', '√离线啦签到成功')
             return
         elif count > retryMaxCount:
