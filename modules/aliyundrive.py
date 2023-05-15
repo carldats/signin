@@ -14,7 +14,7 @@ from typing import NoReturn, Optional
 import requests
 from configobj import ConfigObj
 
-from utils.common import push, get_ip
+from utils.common import push
 
 
 class SignIn:
@@ -237,8 +237,6 @@ class SignIn:
 
 
 def run(config):
-    ipInfo = get_ip()
-
     # 获取所有 refresh token 指向用户
     users = (
         [config['aliyundrive_refresh_tokens']]

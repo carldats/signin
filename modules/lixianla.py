@@ -7,7 +7,7 @@ import time
 import ddddocr
 import requests
 
-from utils.common import push, get_ip
+from utils.common import push
 
 
 def getVcode(codeHeaders) -> str:
@@ -45,10 +45,10 @@ def getSignUrl(codeHearders) -> str:
 
 
 def run(config):
-    ipInfo = get_ip()
-
     email = config['lixianla_login_email']
     password = config['lixianla_login_password']
+    serverIp = config['server_ip']
+
     retryMaxCount = 20
 
     codeHeaders = {
@@ -67,20 +67,8 @@ def run(config):
 
     count = 1
     while True:
-        codeResp = requests.get(
-            timeout=5,
-            verify=False,
-            url="https://lixianla.com/vcode.htm?" + str(random.random()),
-            headers=codeHeaders
-        )
-        codeResp.close()
-        codeBase64 = base64.b64encode(codeResp.content).decode('utf-8')
-        ocr = ddddocr.DdddOcr(show_ad=False)
-        vcode = ocr.classification(codeBase64)
-        logging.info('登陆验证码：' + vcode)
-        if (not re.match('[0-9]{5}', vcode)):
-            continue
         logging.info('==========第' + str(count) + '次登陆==========')
+        vcode = getVcode(codeHeaders)
         loginResp = requests.post(
             timeout=5,
             verify=False,
@@ -122,10 +110,10 @@ def run(config):
                 indexEnd = indexEnd + 1
                 findChar = result[indexStart + indexEnd]
             logging.info('√离线啦签到成功：' + result[indexStart: indexStart + indexEnd] + '天')
-            # push(config, result + '\n\n' + ipInfo, '', '√离线啦签到成功')
+            # push(config, result + '\n\n' + serverIp, '', '√离线啦签到成功')
             return
         elif count > retryMaxCount:
-            push(config, result + '\n\n' + ipInfo, '', '×离线啦签到失败')
+            push(config, result + '\n\n' + serverIp, '', '×离线啦签到失败')
             return
         else:
             count = count + 1

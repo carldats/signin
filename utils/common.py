@@ -29,6 +29,7 @@ def init_config() -> dict:
         logging.error('获取配置失败.')
         raise ValueError('获取配置失败.')
     else:
+        config['server_ip'] = get_ip()
         return config
 
 
