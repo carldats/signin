@@ -192,6 +192,7 @@ def run(config):
         tokens = refresh_token.split("，")
     else:
         tokens = [refresh_token]
+    tokens = config['aliyundrive_refresh_tokens']
     for token in tokens:
         access_token = get_access_token(token, config)
         if access_token:
