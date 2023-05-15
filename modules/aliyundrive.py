@@ -5,6 +5,7 @@
     @Description:
 """
 
+import datetime
 import json
 import logging
 import time
@@ -264,8 +265,10 @@ def run(config):
                 results.append(signin.run())
 
                 # 合并推送
-            title = '\n\n'.join('√第' + str(i['count']) + '天：' + i['reward'] for i in results)
-            if ('天：获得' not in title):
+            title = '\n\n'.join(
+                '√第' + str(i['count']) + '天（' + datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '）：' + i[
+                    'reward'] for i in results)
+            if ('获得' not in title):
                 flag = False
                 time.sleep(2)
                 continue
