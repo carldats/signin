@@ -266,9 +266,9 @@ def run(config):
 
                 # 合并推送
             title = '\n\n'.join(
-                '√第' + str(i['count']) + '天（' + datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '）：' + i[
+                '√第' + str(i['count']) + '天（' + datetime.datetime.now().strftime('%Y-%m-%d') + '）：' + i[
                     'reward'] for i in results)
-            if ('获得' not in title):
+            if ('：获得' not in title):
                 flag = False
                 time.sleep(2)
                 continue
