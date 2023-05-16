@@ -2,10 +2,11 @@ import logging
 import os
 from importlib import import_module
 
+from modules import aliyundrive, lixianla
 from utils.common import init_config
 
-if __name__ == '__main__':
-    config = init_config()
+
+def dynamic_run(config):
     modules = os.listdir('modules')
     modules.sort()
     for file_name in modules:
@@ -17,3 +18,20 @@ if __name__ == '__main__':
             import_module('modules.' + file_name).run(config)
         except Exception as e:
             logging.error(e)
+
+
+def static_run(config):
+    try:
+        logging.info('######## aliyundrive ########')
+        aliyundrive.run(config)
+    except Exception as e:
+        logging.error(e)
+    try:
+        logging.info('######## lixianla ########')
+        lixianla.run(config)
+    except Exception as e:
+        logging.error(e)
+
+
+if __name__ == '__main__':
+    static_run(init_config())
