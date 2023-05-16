@@ -69,7 +69,7 @@ def run(config):
 
     login_flag = False
     count = 1
-    while True:
+    while not login_flag:
         try:
             cookie = ''
             logging.info('==========第' + str(count) + '次登陆==========')
@@ -110,15 +110,13 @@ def run(config):
                     'cookie': cookie
                 }
             )
+            resp.close()
             if '成功' in resp.text:
-                resp.close()
                 login_flag = True
-                break
             elif count >= retry_max_count:
-                return
+                break
             else:
                 logging.warning(resp.text.replace('\n', '').replace(' ', ''))
-                resp.close()
         except Exception as e:
             logging.error(e)
         finally:
@@ -150,6 +148,15 @@ def run(config):
                 indexEnd = indexStart + 6
                 logging.info('√离线啦签到成功：' + result[indexStart: indexEnd])
                 # push(config, result + '\n\n' + serverIp, '', '√离线啦签到成功')
+
+                # 登出
+                requests.get(
+                    timeout=5,
+                    verify=False,
+                    url="https://lixianla.com/user-logout.htm",
+                    headers=headers
+                ).close()
+
                 return
             elif count >= retry_max_count:
                 break
