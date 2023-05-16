@@ -13,7 +13,7 @@ def dynamic_run(config):
         try:
             if not file_name.endswith('.py'):
                 continue
-            logging.info('#################################### ' + file_name + ' ####################################')
+            logging.info('######################## ' + file_name + ' ########################')
             file_name = file_name.replace('.py', '')
             import_module('modules.' + file_name).run(config)
         except Exception as e:
@@ -22,12 +22,12 @@ def dynamic_run(config):
 
 def static_run(config):
     try:
-        logging.info('######## aliyundrive ########')
+        logging.info('######################## aliyundrive ########################')
         aliyundrive.run(config)
     except Exception as e:
         logging.error(e)
     try:
-        logging.info('######## lixianla ########')
+        logging.info('######################## lixianla ########################')
         lixianla.run(config)
     except Exception as e:
         logging.error(e)
