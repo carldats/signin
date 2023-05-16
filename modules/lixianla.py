@@ -114,7 +114,7 @@ def run(config):
             elif count >= retry_max_count:
                 break
             else:
-                logging.warning(resp.text.replace('\n', '').replace(' ', ''))
+                logging.info(resp.text.replace('\n', '').replace(' ', ''))
         except Exception as e:
             logging.error(e)
         finally:
