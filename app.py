@@ -1,3 +1,4 @@
+import _thread
 import logging
 import os
 from importlib import import_module
@@ -15,7 +16,7 @@ def dynamic_run(config):
                 continue
             logging.info('######################## ' + file_name + ' ########################')
             file_name = file_name.replace('.py', '')
-            import_module('modules.' + file_name).run(config)
+            _thread.start_new_thread(import_module('modules.' + file_name).run(config), ("Thread-" + file_name,))
         except Exception as e:
             logging.error(e)
 
