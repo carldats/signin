@@ -51,6 +51,7 @@ def run(config):
     serverIp = config['server_ip']
     retry_max_count = 20
 
+    logging.info('========== 开始登录 ==========')
     headers = {
         'authority': 'lixianla.com',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
@@ -69,8 +70,8 @@ def run(config):
     count = 1
     while not login_flag:
         try:
-            logging.info('==========第' + str(count) + '次登陆==========')
-            # 打开主页
+            logging.info('========== 第' + str(count) + '次 ==========')
+            # 主页获取cookie
             resp = requests.get(
                 timeout=5,
                 verify=False,
@@ -78,13 +79,10 @@ def run(config):
                 headers=headers
             )
             resp.close()
-            try:
+            cookie = ''
+            if 'set-cookie' in resp.headers:
                 cookie = resp.headers['set-cookie']
-                headers['cookie'] = cookie
-            except Exception as e:
-                continue
-
-            vcode = get_vcode(headers)
+            # 登录
             headers = {
                 'authority': 'lixianla.com',
                 'accept': 'text/plain, */*; q=0.01',
@@ -105,12 +103,14 @@ def run(config):
             resp = requests.post(
                 timeout=5,
                 verify=False,
-                url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + vcode,
+                url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + get_vcode(
+                    headers),
                 headers=headers
             )
             resp.close()
             if '成功' in resp.text:
                 login_flag = True
+                logging.info('========== 登录成功 ==========')
             elif count >= retry_max_count:
                 break
             else:
@@ -121,10 +121,11 @@ def run(config):
             count = count + 1
             time.sleep(1)
 
+    logging.info('========== 开始签到 ==========')
     count = 1
     while login_flag:
         try:
-            logging.info('==========第' + str(count) + '次签到==========')
+            logging.info('==========第' + str(count) + '次==========')
             requests.post(
                 timeout=5,
                 verify=False,
