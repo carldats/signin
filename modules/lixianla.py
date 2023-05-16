@@ -67,6 +67,7 @@ def run(config):
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
     }
 
+    login_flag = False
     count = 1
     while True:
         try:
@@ -109,9 +110,12 @@ def run(config):
                     'cookie': cookie
                 }
             )
-            if '成功' in resp.text or count > retry_max_count:
+            if '成功' in resp.text:
                 resp.close()
+                login_flag = True
                 break
+            elif count >= retry_max_count:
+                return
             else:
                 logging.warning(resp.text.replace('\n', '').replace(' ', ''))
                 resp.close()
@@ -122,7 +126,7 @@ def run(config):
             time.sleep(1)
 
     count = 1
-    while True:
+    while login_flag:
         try:
             logging.info('==========第' + str(count) + '次签到==========')
             requests.post(
@@ -147,7 +151,7 @@ def run(config):
                 logging.info('√离线啦签到成功：' + result[indexStart: indexEnd])
                 # push(config, result + '\n\n' + serverIp, '', '√离线啦签到成功')
                 return
-            elif count > retry_max_count:
+            elif count >= retry_max_count:
                 break
         except Exception as e:
             logging.error(e)
