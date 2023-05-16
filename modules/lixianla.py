@@ -69,7 +69,6 @@ def run(config):
     count = 1
     while not login_flag:
         try:
-            cookie = ''
             logging.info('==========第' + str(count) + '次登陆==========')
             # 打开主页
             resp = requests.get(
@@ -78,12 +77,12 @@ def run(config):
                 url="https://lixianla.com",
                 headers=headers
             )
+            resp.close()
             try:
                 cookie = resp.headers['set-cookie']
                 headers['cookie'] = cookie
             except Exception as e:
-                logging.warning(e)
-            resp.close()
+                continue
 
             vcode = get_vcode(headers)
             headers = {
