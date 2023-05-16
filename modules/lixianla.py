@@ -49,7 +49,6 @@ def run(config):
     email = config['lixianla_login_email']
     password = config['lixianla_login_password']
     serverIp = config['server_ip']
-
     retry_max_count = 20
 
     headers = {
@@ -66,7 +65,6 @@ def run(config):
         'upgrade-insecure-requests': '1',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
     }
-
     login_flag = False
     count = 1
     while not login_flag:
@@ -88,27 +86,28 @@ def run(config):
             resp.close()
 
             vcode = get_vcode(headers)
+            headers = {
+                'authority': 'lixianla.com',
+                'accept': 'text/plain, */*; q=0.01',
+                'accept-language': 'zh-CN,zh;q=0.9',
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'origin': 'https://lixianla.com',
+                'referer': 'https://lixianla.com/user-login.htm',
+                'sec-ch-ua': '"Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-origin',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
+                'x-requested-with': 'XMLHttpRequest',
+                'cookie': cookie
+            }
             resp = requests.post(
                 timeout=5,
                 verify=False,
                 url="https://lixianla.com/user-login.htm?email=" + email + "&password=" + password + "&vcode=" + vcode,
-                headers={
-                    'authority': 'lixianla.com',
-                    'accept': 'text/plain, */*; q=0.01',
-                    'accept-language': 'zh-CN,zh;q=0.9',
-                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'origin': 'https://lixianla.com',
-                    'referer': 'https://lixianla.com/user-login.htm',
-                    'sec-ch-ua': '"Google Chrome";v="113", "Chromium";v="113", "Not-A.Brand";v="24"',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-ch-ua-platform': '"Windows"',
-                    'sec-fetch-dest': 'empty',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-site': 'same-origin',
-                    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
-                    'x-requested-with': 'XMLHttpRequest',
-                    'cookie': cookie
-                }
+                headers=headers
             )
             resp.close()
             if '成功' in resp.text:
