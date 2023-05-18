@@ -236,53 +236,42 @@ class SignIn:
 
 def run(config):
     # 获取所有 refresh token 指向用户
-    users = (
-        [config['aliyundrive_refresh_tokens']]
-        if type(config['aliyundrive_refresh_tokens']) == str
-        else config['aliyundrive_refresh_tokens']
-    )
+    aliyundrive_refresh_tokens = str(config['aliyundrive_refresh_tokens'])
+    if ',' in aliyundrive_refresh_tokens:
+        aliyundrive_refresh_tokens = aliyundrive_refresh_tokens.split(',')
+
     aliyundrive_do_not_reward = False
     if 'aliyundrive_do_not_reward' in str(config):
         aliyundrive_do_not_reward = config['aliyundrive_do_not_reward']
 
+    flag = True
+
     results = []
-    retry = 0
-    flag = False
-    while retry < 20:
-        try:
-            retry = retry + 1
-            for user in users:
+    for aliyundrive_refresh_token in aliyundrive_refresh_tokens:
+        for retry in range(5):
+            try:
                 signin = SignIn(
                     config=config,
-                    refresh_token=user,
+                    refresh_token=aliyundrive_refresh_token,
                     do_not_reward=aliyundrive_do_not_reward,
                 )
-
-                results.append(signin.run())
-
-                # 合并推送
-            title = '\n'.join(
-                '√第' + str(i['count']) + '天（' + datetime.datetime.now().strftime('%Y-%m-%d') + '）：' + i[
-                    'reward'] for i in results)
-            if ('：获得' in title):
-                for i in results:
-                    logging.info(
-                        '√第' + str(i['count']) + '天'
-                        + '（' + datetime.datetime.now().strftime('%Y-%m-%d') + '）：'
-                        + i['reward'])
-                # title = '\n'.join(
-                #     '√第' + str(i['count']) + '天（' + datetime.datetime.now().strftime('%Y-%m-%d') + '）：' + i[
-                #         'reward'] for i in results)
-                # push(config, text, '', title)
-                flag = True
-                break
-            else:
+                result = signin.run()
+                if result['reward'] is not None and '获得' in result['reward']:
+                    flag = True
+                    title = '√第' + str(result['count']) + '天' \
+                            + '（' + datetime.datetime.now().strftime('%Y-%m-%d') + '）：' \
+                            + result['reward']
+                    logging.info(title)
+                    results.append(result)
+                    # push(config, text, '', title)
+                    break
+                else:
+                    flag = False
+            except Exception as e:
+                logging.error(e)
                 flag = False
+            finally:
                 time.sleep(2)
-                continue
-        except Exception as e:
-            logging.error(e)
-            flag = False
 
     if (not flag):
         push(config, '请检查流水线日志', '', '×阿里云签到失败')
