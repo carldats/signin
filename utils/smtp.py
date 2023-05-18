@@ -11,8 +11,6 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-from configobj import ConfigObj
-
 
 class Pusher:
 
@@ -59,7 +57,7 @@ class Pusher:
 
 
 def push(
-        config: ConfigObj | dict,
+        config: dict,
         content: str,
         content_html: str,
         title: str,

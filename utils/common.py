@@ -1,4 +1,5 @@
 import argparse
+import configparser
 import json
 import logging
 import os
@@ -6,7 +7,6 @@ from os import environ
 from typing import NoReturn, Optional
 
 import requests
-from configobj import ConfigObj
 
 from utils import dingtalk, serverchan, pushdeer, telegram, pushplus, smtp, feishu, cqhttp, webhook
 
@@ -19,12 +19,15 @@ def init_config() -> dict:
     init_logger(args.debug)  # 初始化日志系统
 
     # 获取配置
-    config = (
-        get_config_from_env()
-        if args.action
-        else ConfigObj('config.ini', encoding='UTF8')
-    )
-
+    config = ''
+    if args.action:
+        config = get_config_from_env()
+    else:
+        # ConfigObj('config.ini', encoding='UTF8')
+        config_parser = configparser.ConfigParser()
+        config_parser.read('config.ini', encoding="utf-8")
+        item_list = config_parser.items('section')  # 获取指定节点的键值对
+        config = dict(item_list)
     if not config:
         logging.error('获取配置失败.')
         raise ValueError('获取配置失败.')
@@ -116,7 +119,7 @@ def get_config_from_env() -> Optional[dict]:
 
 
 def push(
-        config: ConfigObj | dict,
+        config: dict,
         content: str,
         content_html: str,
         title: Optional[str] = None,

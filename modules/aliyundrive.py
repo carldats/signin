@@ -12,7 +12,6 @@ import time
 from typing import NoReturn, Optional
 
 import requests
-from configobj import ConfigObj
 
 from utils.common import push
 
@@ -24,14 +23,13 @@ class SignIn:
 
     def __init__(
             self,
-            config: ConfigObj | dict,
+            config: dict,
             refresh_token: str,
             do_not_reward: Optional[bool] = False,
     ):
         """
         初始化
 
-        :param config: 配置文件, ConfigObj 对象或字典
         :param refresh_token: refresh_token
         :param do_not_reward: 是否不领取奖励
         """

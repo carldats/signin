@@ -9,7 +9,6 @@ import logging
 from typing import Optional
 
 import requests
-from configobj import ConfigObj
 
 
 class Pusher:
@@ -48,7 +47,7 @@ class Pusher:
 
 
 def push(
-        config: ConfigObj | dict,
+        config: dict,
         content: str,
         content_html: str,
         title: str,
